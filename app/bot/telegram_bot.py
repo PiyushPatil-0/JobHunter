@@ -1,0 +1,99 @@
+"""
+Telegram bot bootstrap.
+"""
+
+from __future__ import annotations
+
+import os
+
+from dotenv import load_dotenv
+from telegram.ext import Application
+from telegram.ext import CommandHandler
+
+from app.bot.commands import HELP
+from app.bot.commands import PAUSE
+from app.bot.commands import RESUME
+from app.bot.commands import SCAN
+from app.bot.commands import START
+from app.bot.commands import STATUS
+from app.bot.handlers import BotHandlers
+from app.services.scan_service import ScanService
+from app.utils.logger import logger
+
+load_dotenv()
+
+
+class TelegramBot:
+
+    def __init__(
+        self,
+        scan_service: ScanService,
+    ) -> None:
+
+        token = os.getenv("TELEGRAM_BOT_TOKEN")
+
+        if not token:
+            raise ValueError(
+                "TELEGRAM_BOT_TOKEN not found."
+            )
+
+        self.application = (
+            Application.builder()
+            .token(token)
+            .build()
+        )
+
+        handlers = BotHandlers(scan_service)
+
+        self.application.add_handler(
+            CommandHandler(
+                START,
+                handlers.start,
+            )
+        )
+
+        self.application.add_handler(
+            CommandHandler(
+                HELP,
+                handlers.help,
+            )
+        )
+
+        self.application.add_handler(
+            CommandHandler(
+                STATUS,
+                handlers.status,
+            )
+        )
+
+        self.application.add_handler(
+            CommandHandler(
+                SCAN,
+                handlers.scan,
+            )
+        )
+
+        self.application.add_handler(
+            CommandHandler(
+                PAUSE,
+                handlers.pause,
+            )
+        )
+
+        self.application.add_handler(
+            CommandHandler(
+                RESUME,
+                handlers.resume,
+            )
+        )
+
+    def start(self) -> None:
+
+        logger.success(
+            "Telegram Bot Started."
+        )
+
+        self.application.run_polling(
+            allowed_updates=["message"],
+            drop_pending_updates=True,
+        )

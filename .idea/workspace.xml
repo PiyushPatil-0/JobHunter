@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="6019fbe6-6bc4-4665-a54c-2bebd091582a" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/jobhunter-ai.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/material_theme_project_new.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/analyze_jobs.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/collectors/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/collectors/base.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/collectors/dummy.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/collectors/greenhouse.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/collectors/http_client.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/collectors/localtion_classifier.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/collectors/manager.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/collectors/pre_filter.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/collectors/title_classifier.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/collectors/wellfound.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/config/settings.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/database/database.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/database/init_db.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/database/models.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/database/repository.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/engine/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/engine/engine_result.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/engine/job_engine.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/filters/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/filters/job_filter.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/models/engine_result.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/models/job.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/models/process_result.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/models/raw_job.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/models/repository_statistics.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/notifications/message_builder.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/notifications/telegram.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/scheduler/scheduler.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/services/scan_service.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/services/user_service.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/utils/experience_classifier.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/utils/hash_utils.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/utils/logger.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/utils/scorer.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/config/settings.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/run.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/run_scheduler.py" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="EmbeddingIndexingInfo">
+    <option name="cachedIndexableFilesCount" value="49" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
+  </component>
+  <component name="NextEditCompletionFeaturesState">
+    <decayedCancelled>
+      <entry key="MS100" value="1.0901124378852571" />
+      <entry key="MS500" value="2.5241898424197737" />
+      <entry key="S2" value="4.094729474051363" />
+      <entry key="S5" value="4.605145002765396" />
+      <entry key="S10" value="4.79661802906743" />
+      <entry key="S30" value="4.930833136075915" />
+      <entry key="S60" value="4.966686566973532" />
+      <entry key="M2" value="5.129276695223741" />
+      <entry key="M5" value="8.861050646224934" />
+      <entry key="M10" value="21.06775732530117" />
+      <entry key="M15" value="33.986468669234085" />
+      <entry key="M30" value="62.871330117398486" />
+      <entry key="H1" value="90.81719569811182" />
+      <entry key="H2" value="110.93224038763599" />
+      <entry key="H4" value="123.10943131842834" />
+      <entry key="D1" value="134.5548516375356" />
+      <entry key="W1" value="136.6473522240324" />
+    </decayedCancelled>
+    <decayedSelected>
+      <entry key="MS100" value="0.0" />
+      <entry key="MS500" value="0.0" />
+      <entry key="S2" value="0.0" />
+      <entry key="S5" value="2.2283960044263593E-228" />
+      <entry key="S10" value="1.4927812982571695E-114" />
+      <entry key="S30" value="1.1428749887854759E-38" />
+      <entry key="S60" value="1.0690533142858109E-19" />
+      <entry key="M2" value="3.2696380752092563E-10" />
+      <entry key="M5" value="1.6062009293404798E-4" />
+      <entry key="M10" value="0.012673598263084111" />
+      <entry key="M15" value="0.054358394890482095" />
+      <entry key="M30" value="0.23314886851640998" />
+      <entry key="H1" value="0.4828549145617241" />
+      <entry key="H2" value="0.6948776256016062" />
+      <entry key="H4" value="0.8335932015087467" />
+      <entry key="D1" value="0.9701205269662064" />
+      <entry key="W1" value="0.9956758105471416" />
+    </decayedSelected>
+    <decayedShown>
+      <entry key="MS100" value="1.019121408375542" />
+      <entry key="MS500" value="2.493985764621418" />
+      <entry key="S2" value="4.0823662260758224" />
+      <entry key="S5" value="4.599551937765222" />
+      <entry key="S10" value="4.793698939036069" />
+      <entry key="S30" value="4.929831364541438" />
+      <entry key="S60" value="4.966181645002082" />
+      <entry key="M2" value="5.129006808073468" />
+      <entry key="M5" value="8.860786325576028" />
+      <entry key="M10" value="21.079062801163488" />
+      <entry key="M15" value="34.03884829600401" />
+      <entry key="M30" value="63.102191112212495" />
+      <entry key="H1" value="91.29826479504726" />
+      <entry key="H2" value="111.62599412692263" />
+      <entry key="H4" value="123.94239283200369" />
+      <entry key="D1" value="135.5248559814472" />
+      <entry key="W1" value="137.64301115264547" />
+    </decayedShown>
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 1,
+  &quot;fromUser&quot;: false
+}</component>
+  <component name="ProjectId" id="3GJko4n5pRqPL8GHEGhsEznO2ZL" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_MARK_IGNORED_FILES_AS_EXCLUDED&quot;: &quot;true&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;Python.analyze_jobs.executor&quot;: &quot;Run&quot;,
+    &quot;Python.run.executor&quot;: &quot;Run&quot;,
+    &quot;Python.test_collector.executor&quot;: &quot;Run&quot;,
+    &quot;Python.test_config.executor&quot;: &quot;Run&quot;,
+    &quot;Python.test_db.executor&quot;: &quot;Run&quot;,
+    &quot;Python.test_hash.executor&quot;: &quot;Run&quot;,
+    &quot;Python.test_job.executor&quot;: &quot;Run&quot;,
+    &quot;Python.test_logger.executor&quot;: &quot;Run&quot;,
+    &quot;Python.test_telegram.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\piyus\PycharmProjects\jobhunter-ai" />
+      <recent name="C:\Users\piyus\PycharmProjects\jobhunter-ai\app\collectors" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Python.run">
+    <configuration name="analyze_jobs" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="jobhunter-ai" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="DEBUG_JUST_MY_CODE" value="false" />
+      <option name="RUN_TOOL" value="" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/analyze_jobs.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="run" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="jobhunter-ai" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="DEBUG_JUST_MY_CODE" value="false" />
+      <option name="RUN_TOOL" value="" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/run.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="test_collector" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="jobhunter-ai" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="DEBUG_JUST_MY_CODE" value="false" />
+      <option name="RUN_TOOL" value="" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test_collector.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="test_config" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="jobhunter-ai" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="DEBUG_JUST_MY_CODE" value="false" />
+      <option name="RUN_TOOL" value="" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test_config.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="test_hash" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="jobhunter-ai" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="DEBUG_JUST_MY_CODE" value="false" />
+      <option name="RUN_TOOL" value="" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test_hash.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.run" />
+        <item itemvalue="Python.analyze_jobs" />
+        <item itemvalue="Python.test_config" />
+        <item itemvalue="Python.test_hash" />
+        <item itemvalue="Python.test_collector" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-python-sdk-50341a9f1f9c-c2ffad84badb-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-261.26222.68" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="6019fbe6-6bc4-4665-a54c-2bebd091582a" name="Changes" comment="" />
+      <created>1783697230665</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1783697230665</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

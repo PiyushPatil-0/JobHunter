@@ -1,0 +1,61 @@
+app:
+  name: JobHunter AI
+  version: 1.0.0
+  environment: development
+
+scheduler:
+  interval_minutes: 10
+
+database:
+  path: data/jobs.db
+
+telegram:
+  enabled: true
+
+filters:
+  minimum_match_score: 60
+
+job_preferences:
+  keywords:
+    - Java
+    - Spring Boot
+    - Backend
+    - Microservices
+    - Kafka
+    - Redis
+    - Docker
+
+  locations:
+    - Mumbai
+    - Navi Mumbai
+    - Thane
+    - Remote
+
+  experience:
+    - Fresher
+    - 0-1 years
+
+  employment_types:
+    - Full Time
+
+companies:
+  include: []
+
+  exclude:
+    - TCS
+    - Infosys
+
+sources:
+
+  greenhouse:
+
+    enabled: true
+
+    companies:
+
+      - stripe
+      - mongodb
+      - datadog
+      - cloudflare
+      - plaid
+      - figma
