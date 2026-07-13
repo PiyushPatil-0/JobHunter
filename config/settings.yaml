@@ -4,7 +4,13 @@ app:
   environment: development
 
 scheduler:
-  interval_minutes: 10
+  # ATS collectors (Greenhouse, Lever, Workday, SmartRecruiters,
+  # Ashby) - polled via API, updates frequently.
+  ats_interval_minutes: 10
+
+  # Consumer job board collectors (LinkedIn, Naukri) - heavier,
+  # rate limited, checked less often.
+  job_board_interval_minutes: 60
 
 database:
   path: data/jobs.db
@@ -16,6 +22,9 @@ filters:
   minimum_match_score: 60
 
 job_preferences:
+  # Baseline seed for LinkedIn/Naukri search scope and for the
+  # location allowlist - real relevance filtering happens per user
+  # via onboarding preferences, not here.
   keywords:
     - Java
     - Spring Boot
@@ -59,3 +68,72 @@ sources:
       - cloudflare
       - plaid
       - figma
+
+  lever:
+
+    enabled: false
+
+    companies:
+      - example-lever-company
+
+  ashby:
+
+    enabled: false
+
+    companies:
+      - example-ashby-company
+
+  smartrecruiters:
+
+    enabled: false
+
+    companies:
+      - example-smartrecruiters-company
+
+  # Workday has no simple company slug - each tenant's host/site
+  # combination is unique to that company's career site. Read
+  # these three values off the company's own Workday careers URL,
+  # e.g. https://acme.wd5.myworkdayjobs.com/en-US/External ->
+  #   host: acme.wd5.myworkdayjobs.com
+  #   tenant: acme
+  #   site: External
+  workday:
+
+    enabled: false
+
+    tenants:
+      - host: example.wd5.myworkdayjobs.com
+        tenant: example
+        site: External
+
+  # Both job board sources are unofficial scrapers of public
+  # search endpoints (see app/collectors/linkedin.py and
+  # naukri.py for details). Disabled by default - review the
+  # relevant Terms of Service, then flip enabled: true.
+
+  linkedin:
+
+    enabled: false
+
+    keywords:
+      - Java Backend Developer
+      - Software Engineer
+
+    locations:
+      - India
+      - Remote
+
+    max_pages: 2
+
+  naukri:
+
+    enabled: false
+
+    keywords:
+      - Java Backend Developer
+
+    locations:
+      - Mumbai
+      - Bangalore
+
+    max_pages: 2

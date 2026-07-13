@@ -7,6 +7,7 @@ from pathlib import Path
 import yaml
 from dotenv import load_dotenv
 from pydantic import BaseModel
+from pydantic import Field
 
 load_dotenv()
 
@@ -20,7 +21,8 @@ class AppConfig(BaseModel):
 
 
 class SchedulerConfig(BaseModel):
-    interval_minutes: int
+    ats_interval_minutes: int
+    job_board_interval_minutes: int
 
 
 class DatabaseConfig(BaseModel):
@@ -47,15 +49,65 @@ class CompanyConfig(BaseModel):
     exclude: list[str]
 
 
-# ---------- NEW ----------
+# ---------- SOURCES: ATS (company-slug based) ----------
 
 class GreenhouseConfig(BaseModel):
     enabled: bool = True
     companies: list[str]
 
 
+class LeverConfig(BaseModel):
+    enabled: bool = False
+    companies: list[str] = Field(default_factory=list)
+
+
+class AshbyConfig(BaseModel):
+    enabled: bool = False
+    companies: list[str] = Field(default_factory=list)
+
+
+class SmartRecruitersConfig(BaseModel):
+    enabled: bool = False
+    companies: list[str] = Field(default_factory=list)
+
+
+# ---------- SOURCES: Workday (tenant-based, no simple slug) ----------
+
+class WorkdayTenantConfig(BaseModel):
+    host: str
+    tenant: str
+    site: str
+
+
+class WorkdayConfig(BaseModel):
+    enabled: bool = False
+    tenants: list[WorkdayTenantConfig] = Field(default_factory=list)
+
+
+# ---------- SOURCES: consumer job boards ----------
+
+class LinkedInConfig(BaseModel):
+    enabled: bool = False
+    keywords: list[str] = Field(default_factory=list)
+    locations: list[str] = Field(default_factory=list)
+    max_pages: int = 2
+
+
+class NaukriConfig(BaseModel):
+    enabled: bool = False
+    keywords: list[str] = Field(default_factory=list)
+    locations: list[str] = Field(default_factory=list)
+    max_pages: int = 2
+
+
 class SourcesConfig(BaseModel):
     greenhouse: GreenhouseConfig
+    lever: LeverConfig = LeverConfig()
+    ashby: AshbyConfig = AshbyConfig()
+    smartrecruiters: SmartRecruitersConfig = SmartRecruitersConfig()
+    workday: WorkdayConfig = WorkdayConfig()
+    linkedin: LinkedInConfig = LinkedInConfig()
+    naukri: NaukriConfig = NaukriConfig()
 
 
 # ---------- SETTINGS ----------

@@ -17,15 +17,25 @@ class ScanService:
         self.engine = engine
         self._lock = Lock()
 
-    def run_scan(self) -> EngineResult | None:
+    def run_scan(self, group: str | None = None) -> EngineResult | None:
+        """
+        Run a scan, optionally scoped to a single collector group.
+
+        The lock is shared across every group so two scheduled
+        tiers (e.g. "ats" and "job_boards") can never write to
+        SQLite at the same time - a concurrent trigger is simply
+        skipped rather than queued.
+        """
 
         if not self._lock.acquire(blocking=False):
             logger.warning("Scan already running.")
             return None
 
         try:
-            logger.info("Starting scan...")
-            return self.engine.run()
+            logger.info(
+                f"Starting scan (group={group or 'all'})..."
+            )
+            return self.engine.run(group=group)
 
         finally:
             self._lock.release()

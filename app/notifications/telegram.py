@@ -21,26 +21,27 @@ class TelegramNotifier:
     def __init__(self) -> None:
 
         self.token = os.getenv("TELEGRAM_BOT_TOKEN")
-        self.chat_id = os.getenv("TELEGRAM_CHAT_ID")
 
         if not self.token:
             raise ValueError("TELEGRAM_BOT_TOKEN not found.")
 
-        if not self.chat_id:
-            raise ValueError("TELEGRAM_CHAT_ID not found.")
+        # Optional. Reserved for future admin/status alerts -
+        # per-user job notifications always target the user's own
+        # telegram_chat_id instead.
+        self.admin_chat_id = os.getenv("TELEGRAM_CHAT_ID")
 
         self.base_url = (
             f"https://api.telegram.org/bot{self.token}"
         )
 
-    def send_message(self, message: str) -> bool:
+    def send_message(self, chat_id: str, message: str) -> bool:
 
         try:
 
             response = httpx.post(
                 f"{self.base_url}/sendMessage",
                 json={
-                    "chat_id": self.chat_id,
+                    "chat_id": chat_id,
                     "text": message,
                     "parse_mode": "HTML",
                     "disable_web_page_preview": True,
@@ -55,7 +56,7 @@ class TelegramNotifier:
             if result.get("ok"):
 
                 logger.success(
-                    "Telegram notification sent."
+                    f"Telegram notification sent to {chat_id}."
                 )
 
                 return True
@@ -67,15 +68,19 @@ class TelegramNotifier:
         except Exception:
 
             logger.exception(
-                "Telegram notification failed."
+                f"Telegram notification failed for {chat_id}."
             )
 
             return False
 
     def send_jobs(
         self,
+        chat_id: str,
         jobs: list[Job],
     ) -> bool:
+        """
+        Send a single digest of jobs to one specific chat.
+        """
 
         if not jobs:
 
@@ -87,4 +92,4 @@ class TelegramNotifier:
 
         message = MessageBuilder.build(jobs)
 
-        return self.send_message(message)
+        return self.send_message(chat_id, message)

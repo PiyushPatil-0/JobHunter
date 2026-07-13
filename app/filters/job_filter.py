@@ -1,5 +1,20 @@
 """
 Production Job Filter.
+
+This is deliberately thin. It only enforces things that are true
+for *every* user regardless of what they're looking for: a company
+blacklist, and the geographic scope this service operates in.
+
+Anything about whether a specific job is relevant to a specific
+person - skills, experience level, employment type - belongs to
+that person's own preferences and is decided by
+app.matching.PreferenceMatcher, not here. An earlier version of
+this filter also hard-rejected on experience and on a software-
+engineering-specific keyword score; that meant a job outside that
+one persona (e.g. an MBA/marketing role) was discarded before any
+user's own preferences ever got a chance to match it, no matter who
+had onboarded. Global relevance gates don't work once more than one
+kind of user exists.
 """
 
 from __future__ import annotations
@@ -8,12 +23,18 @@ from loguru import logger
 
 from app.config.settings import settings
 from app.models.job import Job
-from app.utils.experience_classifier import ExperienceClassifier
-from app.utils.scorer import JobScorer
 
 
 class JobFilter:
 
+    # Broad, hardcoded net of major Indian tech hubs - always
+    # accepted regardless of config, since this app fundamentally
+    # targets Indian/remote roles. job_preferences.locations
+    # (config) is unioned on top of this at construction time.
+    # This is a geographic *service scope* decision (which regions
+    # we operate in at all), not a personal preference - personal
+    # location preference is handled separately per user by
+    # PreferenceMatcher.
     ALLOWED_LOCATIONS = {
         "india",
         "remote",
@@ -50,11 +71,14 @@ class JobFilter:
 
     def __init__(self) -> None:
 
-        self.minimum_score = settings.filters.minimum_match_score
-
         self.excluded_companies = {
             company.lower()
             for company in settings.companies.exclude
+        }
+
+        self.allowed_locations = self.ALLOWED_LOCATIONS | {
+            location.lower()
+            for location in settings.job_preferences.locations
         }
 
     def accept(self, job: Job) -> bool:
@@ -68,41 +92,12 @@ class JobFilter:
             return False
 
         # --------------------------------------------------
-        # Experience
-        # --------------------------------------------------
-
-        experience = ExperienceClassifier.classify(
-            job.title,
-            job.description,
-        )
-
-        if experience > 2:
-            logger.info(
-                f"Rejected (experience={experience}): {job.title}"
-            )
-            return False
-
-        # --------------------------------------------------
-        # Score
-        # --------------------------------------------------
-
-        score = JobScorer.score(job)
-
-        job.match_score = score
-
-        if score < self.minimum_score:
-            logger.info(
-                f"Rejected (score={score}): {job.title}"
-            )
-            return False
-
-        # --------------------------------------------------
-        # Location
+        # Location - operational service scope, not personal
+        # preference.
         # --------------------------------------------------
 
         location = job.location.lower()
 
-        # Explicitly reject foreign-only locations.
         if any(
             word in location
             for word in self.BLOCKED_LOCATIONS
@@ -112,10 +107,9 @@ class JobFilter:
             )
             return False
 
-        # Accept if preferred.
         if any(
             word in location
-            for word in self.ALLOWED_LOCATIONS
+            for word in self.allowed_locations
         ):
             return True
 

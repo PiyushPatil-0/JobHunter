@@ -5,7 +5,48 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6019fbe6-6bc4-4665-a54c-2bebd091582a" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/app/bot/onboarding.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/collectors/ashby.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/collectors/groups.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/collectors/lever.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/collectors/linkedin.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/collectors/naukri.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/collectors/search_scope.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/collectors/smartrecruiters.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/collectors/workday.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/database/notification_repository.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/database/preference_repository.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/database/user_repository.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/matching/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/matching/preference_matcher.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/models/preference.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/models/user.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/utils/experience_ranges.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/bot/commands.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/bot/commands.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/bot/handlers.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/bot/handlers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/bot/telegram_bot.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/bot/telegram_bot.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/collectors/greenhouse.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/collectors/greenhouse.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/collectors/http_client.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/collectors/http_client.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/collectors/manager.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/collectors/manager.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/collectors/pre_filter.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/collectors/title_classifier.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/collectors/wellfound.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/collectors/wellfound.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/config/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/config/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/database/init_db.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/database/init_db.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/database/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/database/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/engine/job_engine.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/engine/job_engine.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/filters/job_filter.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/filters/job_filter.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/models/job.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/models/job.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/notifications/telegram.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/notifications/telegram.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/scheduler/scheduler.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/scheduler/scheduler.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/services/scan_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/services/scan_service.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/utils/scorer.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/settings.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/settings.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/run.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/run_bot.py" beforeDir="false" afterPath="$PROJECT_DIR$/run_bot.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/run_scheduler.py" beforeDir="false" afterPath="$PROJECT_DIR$/run_scheduler.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -13,7 +54,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="49" />
+    <option name="cachedIndexableFilesCount" value="70" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -31,61 +72,61 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="2.2752202392289954E-23" />
-      <entry key="MS500" value="5.108736091706812E-5" />
-      <entry key="S2" value="0.14212261269891394" />
-      <entry key="S5" value="0.6944962336278723" />
-      <entry key="S10" value="1.1821802163666317" />
-      <entry key="S30" value="2.1269134085347763" />
-      <entry key="S60" value="3.3893210332271773" />
-      <entry key="M2" value="5.2834157113030304" />
-      <entry key="M5" value="9.75428882539279" />
-      <entry key="M10" value="19.1482943948058" />
-      <entry key="M15" value="30.349503576621817" />
-      <entry key="M30" value="59.37809047889879" />
-      <entry key="H1" value="91.1168945714425" />
-      <entry key="H2" value="115.60723730550829" />
-      <entry key="H4" value="130.9918719028681" />
-      <entry key="D1" value="145.79642931541116" />
-      <entry key="W1" value="148.53710914543652" />
+      <entry key="MS100" value="1.062169589010118" />
+      <entry key="MS500" value="1.9563820769109201" />
+      <entry key="S2" value="5.277779705641544" />
+      <entry key="S5" value="8.114936644434056" />
+      <entry key="S10" value="10.037797854534329" />
+      <entry key="S30" value="12.588577343514753" />
+      <entry key="S60" value="13.641254523940752" />
+      <entry key="M2" value="14.413821977432804" />
+      <entry key="M5" value="18.054078013454497" />
+      <entry key="M10" value="27.609939255031236" />
+      <entry key="M15" value="38.367992466387285" />
+      <entry key="M30" value="69.12614806566495" />
+      <entry key="H1" value="108.77321102480937" />
+      <entry key="H2" value="143.24373663491747" />
+      <entry key="H4" value="166.44500334026404" />
+      <entry key="D1" value="189.8143190176301" />
+      <entry key="W1" value="194.24794058819515" />
     </decayedCancelled>
     <decayedSelected>
-      <entry key="MS100" value="1.0" />
-      <entry key="MS500" value="1.0" />
-      <entry key="S2" value="1.0" />
-      <entry key="S5" value="1.0" />
-      <entry key="S10" value="1.0" />
-      <entry key="S30" value="1.0" />
-      <entry key="S60" value="1.0" />
-      <entry key="M2" value="1.000000000006213" />
-      <entry key="M5" value="1.0000329095692" />
-      <entry key="M10" value="1.0057366862560153" />
-      <entry key="M15" value="1.0320460175168518" />
-      <entry key="M30" value="1.1790140148615518" />
-      <entry key="H1" value="1.4231004784463754" />
-      <entry key="H2" value="1.6504617424924983" />
-      <entry key="H4" value="1.8065120845297322" />
-      <entry key="D1" value="1.9647952275391978" />
-      <entry key="W1" value="1.9948931701921244" />
+      <entry key="MS100" value="0.0" />
+      <entry key="MS500" value="0.0" />
+      <entry key="S2" value="4.084153429493915E-222" />
+      <entry key="S5" value="2.7825361773109796E-89" />
+      <entry key="S10" value="5.2749750495248563E-45" />
+      <entry key="S30" value="1.7407649617417881E-15" />
+      <entry key="S60" value="4.172247549872593E-8" />
+      <entry key="M2" value="2.0426080265005414E-4" />
+      <entry key="M5" value="0.033426299940602845" />
+      <entry key="M10" value="0.1838744128765827" />
+      <entry key="M15" value="0.33244800685043585" />
+      <entry key="M30" value="0.6691620503050891" />
+      <entry key="H1" value="1.0721158891595957" />
+      <entry key="H2" value="1.4325458992103697" />
+      <entry key="H4" value="1.6830321535341948" />
+      <entry key="D1" value="1.941746591870029" />
+      <entry key="W1" value="1.9915331384352075" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="3.629172103890137E-5" />
-      <entry key="MS500" value="0.1294524079395753" />
-      <entry key="S2" value="0.736402518136385" />
-      <entry key="S5" value="1.4984865612377065" />
-      <entry key="S10" value="2.0754913288959123" />
-      <entry key="S30" value="3.0887798948899023" />
-      <entry key="S60" value="4.369786309844593" />
-      <entry key="M2" value="6.273465840640179" />
-      <entry key="M5" value="10.750182469167122" />
-      <entry key="M10" value="20.151366343760074" />
-      <entry key="M15" value="31.379014228903255" />
-      <entry key="M30" value="60.554660568943994" />
-      <entry key="H1" value="92.53808582143934" />
-      <entry key="H2" value="117.25647459316217" />
-      <entry key="H4" value="132.7976865668112" />
-      <entry key="D1" value="147.761094614706" />
-      <entry key="W1" value="150.53198339207856" />
+      <entry key="MS100" value="0.9651242853695747" />
+      <entry key="MS500" value="1.9210178377300666" />
+      <entry key="S2" value="5.245117437924599" />
+      <entry key="S5" value="8.091680056742032" />
+      <entry key="S10" value="10.022344820579335" />
+      <entry key="S30" value="12.581173538489464" />
+      <entry key="S60" value="13.636976227163125" />
+      <entry key="M2" value="14.411691215575011" />
+      <entry key="M5" value="18.08630172804034" />
+      <entry key="M10" value="27.7926631421715" />
+      <entry key="M15" value="38.69911118429021" />
+      <entry key="M30" value="69.79360837163446" />
+      <entry key="H1" value="109.84370989622604" />
+      <entry key="H2" value="144.67512393584727" />
+      <entry key="H4" value="168.12733605120664" />
+      <entry key="D1" value="191.7559286597411" />
+      <entry key="W1" value="196.23945360747658" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo">{
@@ -116,8 +157,9 @@
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
     &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/piyus/PycharmProjects/jobhunter-ai&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -126,6 +168,13 @@
   }
 }</component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\piyus\PycharmProjects\jobhunter-ai" />
+      <recent name="C:\Users\piyus\PycharmProjects\jobhunter-ai\config" />
+      <recent name="C:\Users\piyus\PycharmProjects\jobhunter-ai\app\config" />
+      <recent name="C:\Users\piyus\PycharmProjects\jobhunter-ai\app\matching" />
+      <recent name="C:\Users\piyus\PycharmProjects\jobhunter-ai\app\models" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\piyus\PycharmProjects\jobhunter-ai" />
       <recent name="C:\Users\piyus\PycharmProjects\jobhunter-ai\app\collectors" />

@@ -41,44 +41,58 @@ class GreenhouseCollector(BaseCollector):
                 data = self.client.get_json(url)
 
                 for item in data.get("jobs", []):
-                    
+
                     title = item.get("title", "")
 
-                    from app.collectors.pre_filter import PreFilter
+                    # No title-based relevance filtering here.
+                    # Whether a job is relevant is entirely up to
+                    # each onboarded user's own preferences
+                    # (app.matching.PreferenceMatcher) - a hardcoded
+                    # allowlist here would silently drop roles for
+                    # any user whose interests don't fit one persona.
 
-                    if not PreFilter.accept(title):
-                        continue
+                    try:
 
-                    jobs.append(
+                        jobs.append(
 
-                        Job(
+                            Job(
 
-                            title=item.get("title", ""),
+                                title=title,
 
-                            company=company,
+                                company=company,
 
-                            location=item.get(
-                                "location",
-                                {}
-                            ).get(
-                                "name",
-                                ""
-                            ),
+                                location=item.get(
+                                    "location",
+                                    {}
+                                ).get(
+                                    "name",
+                                    ""
+                                ),
 
-                            experience="Unknown",
+                                experience="Unknown",
 
-                            source=JobSource.COMPANY,
+                                source=JobSource.GREENHOUSE,
 
-                            url=item.get(
-                                "absolute_url",
-                                ""
-                            ),
+                                url=item.get(
+                                    "absolute_url",
+                                    ""
+                                ),
 
-                            employment_type=EmploymentType.FULL_TIME,
+                                employment_type=EmploymentType.FULL_TIME,
 
-                            description=item.get("content", "")
+                                description=item.get("content", "")
+                            )
                         )
-                    )
+
+                    except Exception:
+
+                        # A single malformed listing (e.g. missing/
+                        # too-short title) shouldn't abort the rest
+                        # of this company's postings.
+                        logger.warning(
+                            f"Skipped malformed job at {company}: "
+                            f"{title!r}"
+                        )
 
             except Exception:
 

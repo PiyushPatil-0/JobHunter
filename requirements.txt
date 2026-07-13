@@ -1,0 +1,9 @@
+httpx
+pydantic
+pyyaml
+python-dotenv
+sqlalchemy
+apscheduler
+python-telegram-bot
+loguru
+beautifulsoup4

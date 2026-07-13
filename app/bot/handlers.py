@@ -16,16 +16,8 @@ class BotHandlers:
 
         self.scan_service = scan_service
 
-    async def start(
-        self,
-        update: Update,
-        context: ContextTypes.DEFAULT_TYPE,
-    ):
-
-        await update.message.reply_text(
-            "👋 Welcome to JobHunter AI!\n\n"
-            "Use /help to see available commands."
-        )
+    # /start is handled by the onboarding ConversationHandler
+    # (app.bot.onboarding) instead of a plain handler here.
 
     async def help(
         self,
@@ -36,6 +28,7 @@ class BotHandlers:
         await update.message.reply_text(
             "/scan - Scan jobs now\n"
             "/status - Current status\n"
+            "/preferences - Update your job preferences\n"
             "/pause - Pause notifications\n"
             "/resume - Resume notifications"
         )

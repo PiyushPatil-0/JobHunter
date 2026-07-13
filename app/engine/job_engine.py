@@ -5,9 +5,14 @@ Core JobHunter Engine.
 from __future__ import annotations
 
 from app.collectors.manager import CollectorManager
+from app.database.notification_repository import UserNotificationRepository
+from app.database.preference_repository import PreferenceRepository
 from app.database.repository import JobRepository
+from app.database.user_repository import UserRepository
 from app.engine.engine_result import EngineResult
 from app.filters.job_filter import JobFilter
+from app.matching.preference_matcher import PreferenceMatcher
+from app.models.job import Job
 from app.notifications.telegram import TelegramNotifier
 from app.utils.hash_utils import assign_job_hash
 from app.utils.logger import logger
@@ -27,13 +32,13 @@ class JobEngine:
         self.notifier = notifier
         self.filter = JobFilter()
 
-    def run(self) -> EngineResult:
+    def run(self, group: str | None = None) -> EngineResult:
 
         logger.info("Starting JobHunter Engine...")
 
         result = EngineResult()
 
-        jobs = self.collector_manager.collect_jobs()
+        jobs = self.collector_manager.collect_jobs(group=group)
 
         result.scanned = len(jobs)
 
@@ -41,14 +46,20 @@ class JobEngine:
             f"Collected {result.scanned} jobs."
         )
 
-        jobs_to_notify: list = []
+        # Jobs that passed the (deliberately thin) global filter
+        # this run, whether freshly inserted or already stored from
+        # a previous scan. A job already in the DB can still be
+        # brand new to a user who onboarded after it was first
+        # collected, so both stay eligible for per-user matching.
+        matchable_jobs: list[Job] = []
 
         for job in jobs:
 
             try:
 
                 # ----------------------------------
-                # Filter
+                # Global operational filter (company
+                # blacklist + geographic scope only)
                 # ----------------------------------
 
                 if not self.filter.accept(job):
@@ -58,26 +69,19 @@ class JobEngine:
                     continue
 
                 # ----------------------------------
-                # Hash
+                # Hash + dedup against the jobs table
                 # ----------------------------------
 
                 assign_job_hash(job)
 
-                # ----------------------------------
-                # Repository
-                # ----------------------------------
-
                 process = self.repository.process(job)
 
                 if process.duplicate:
-
                     result.duplicates += 1
+                else:
+                    result.inserted += 1
 
-                    continue
-
-                result.inserted += 1
-
-                jobs_to_notify.append(job)
+                matchable_jobs.append(job)
 
             except Exception:
 
@@ -88,28 +92,15 @@ class JobEngine:
                 result.failed += 1
 
         # ------------------------------------------
-        # Send ONE Telegram digest
+        # Fan matched jobs out to each onboarded user
         # ------------------------------------------
 
-        if jobs_to_notify:
+        if matchable_jobs:
 
-            if self.notifier.send_jobs(jobs_to_notify):
-
-                for job in jobs_to_notify:
-
-                    self.repository.mark_notified(
-                        job.hash
-                    )
-
-                result.notified = len(
-                    jobs_to_notify
-                )
-
-            else:
-
-                result.failed += len(
-                    jobs_to_notify
-                )
+            result.notified, result.failed = self._notify_users(
+                matchable_jobs,
+                result.failed,
+            )
 
         logger.success(
             f"""
@@ -127,3 +118,77 @@ Failed       : {result.failed}
         )
 
         return result
+
+    def _notify_users(
+        self,
+        jobs: list[Job],
+        failed_so_far: int,
+    ) -> tuple[int, int]:
+        """
+        For every onboarded, active user: find jobs matching their
+        own preferences that they haven't been sent yet, score each
+        one for that user specifically, deliver a digest, and
+        record what was sent so it never repeats.
+
+        Returns (notified_count, failed_count).
+        """
+
+        notified = 0
+        failed = failed_so_far
+
+        preferences = PreferenceRepository.list_all_active()
+
+        if not preferences:
+
+            logger.info(
+                "No onboarded users to notify."
+            )
+
+            return notified, failed
+
+        for preference in preferences:
+
+            user = UserRepository.get_by_id(preference.user_id)
+
+            if user is None or not user.telegram_chat_id:
+                continue
+
+            unseen_matches = [
+                job
+                for job in jobs
+                if PreferenceMatcher.matches(job, preference)
+                and not UserNotificationRepository.already_notified(
+                    user.id,
+                    job.hash,
+                )
+            ]
+
+            if not unseen_matches:
+                continue
+
+            # Score reflects THIS user's preferences, not a shared
+            # global score - shown as the digest's Match Score.
+            for job in unseen_matches:
+                job.match_score = PreferenceMatcher.score(job, preference)
+
+            sent = self.notifier.send_jobs(
+                user.telegram_chat_id,
+                unseen_matches,
+            )
+
+            if sent:
+
+                for job in unseen_matches:
+
+                    UserNotificationRepository.record(
+                        user.id,
+                        job.hash,
+                    )
+
+                notified += len(unseen_matches)
+
+            else:
+
+                failed += len(unseen_matches)
+
+        return notified, failed

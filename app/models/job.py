@@ -14,8 +14,15 @@ from pydantic import Field
 class JobSource(str, Enum):
     NAUKRI = "Naukri"
     WELLFOUND = "Wellfound"
-    COMPANY = "Company"
     LINKEDIN = "LinkedIn"
+    GREENHOUSE = "Greenhouse"
+    LEVER = "Lever"
+    WORKDAY = "Workday"
+    SMARTRECRUITERS = "SmartRecruiters"
+    ASHBY = "Ashby"
+    # Generic fallback - used by collectors (e.g. the dev-only
+    # DummyCollector) that don't map to a specific real ATS.
+    COMPANY = "Company"
 
 
 class EmploymentType(str, Enum):

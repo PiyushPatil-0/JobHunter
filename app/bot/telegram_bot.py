@@ -14,9 +14,9 @@ from app.bot.commands import HELP
 from app.bot.commands import PAUSE
 from app.bot.commands import RESUME
 from app.bot.commands import SCAN
-from app.bot.commands import START
 from app.bot.commands import STATUS
 from app.bot.handlers import BotHandlers
+from app.bot.onboarding import build_onboarding_handler
 from app.services.scan_service import ScanService
 from app.utils.logger import logger
 
@@ -45,11 +45,9 @@ class TelegramBot:
 
         handlers = BotHandlers(scan_service)
 
+        # Onboarding conversation owns /start and /preferences.
         self.application.add_handler(
-            CommandHandler(
-                START,
-                handlers.start,
-            )
+            build_onboarding_handler()
         )
 
         self.application.add_handler(
@@ -94,6 +92,6 @@ class TelegramBot:
         )
 
         self.application.run_polling(
-            allowed_updates=["message"],
+            allowed_updates=["message", "callback_query"],
             drop_pending_updates=True,
         )

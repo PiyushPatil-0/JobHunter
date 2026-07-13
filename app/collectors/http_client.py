@@ -28,21 +28,44 @@ class HttpClient:
             },
         )
 
-    def get(self, url: str) -> str:
+    def get(
+        self,
+        url: str,
+        headers: dict | None = None,
+    ) -> str:
 
         logger.info(f"GET {url}")
 
-        response = self.client.get(url)
+        response = self.client.get(url, headers=headers)
 
         response.raise_for_status()
 
         return response.text
 
-    def get_json(self, url: str):
+    def get_json(
+        self,
+        url: str,
+        headers: dict | None = None,
+    ):
 
         logger.info(f"GET {url}")
 
-        response = self.client.get(url)
+        response = self.client.get(url, headers=headers)
+
+        response.raise_for_status()
+
+        return response.json()
+
+    def post_json(
+        self,
+        url: str,
+        json: dict,
+        headers: dict | None = None,
+    ):
+
+        logger.info(f"POST {url}")
+
+        response = self.client.post(url, json=json, headers=headers)
 
         response.raise_for_status()
 
