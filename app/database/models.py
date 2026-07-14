@@ -45,6 +45,11 @@ class Job(Base):
 
     source: Mapped[str] = mapped_column(String)
 
+    employment_type: Mapped[str] = mapped_column(
+        String(32),
+        default="Unknown",
+    )
+
     url: Mapped[str] = mapped_column(String)
 
     match_score: Mapped[float] = mapped_column(

@@ -2,12 +2,15 @@
 Repository layer for Job persistence.
 """
 
+from sqlalchemy import delete
 from sqlalchemy import func
 from sqlalchemy import select
 from datetime import datetime
+from datetime import timedelta
 
 from app.database.database import get_session
 from app.database.models import Job as JobEntity
+from app.database.models import UserNotification as UserNotificationEntity
 from app.models.job import Job
 from app.models.process_result import ProcessResult
 from app.models.repository_statistics import RepositoryStatistics
@@ -30,6 +33,7 @@ class JobRepository:
             location=job.location,
             experience=job.experience,
             source=job.source.value,
+            employment_type=job.employment_type.value,
             description=job.description,
             url=job.url,
             match_score=0,
@@ -94,8 +98,23 @@ class JobRepository:
 
     @staticmethod
     def cleanup(days: int) -> int:
-        """
-        Placeholder for cleanup.
-        Will be implemented when scheduler is added.
-        """
-        return 0
+        """Delete jobs and their per-user delivery records past retention."""
+        if days < 1:
+            raise ValueError("Job retention must be at least one day.")
+
+        cutoff = datetime.utcnow() - timedelta(days=days)
+        expired_hashes = select(JobEntity.hash).where(
+            JobEntity.created_at < cutoff
+        )
+
+        with get_session() as session:
+            session.execute(
+                delete(UserNotificationEntity).where(
+                    UserNotificationEntity.job_hash.in_(expired_hashes)
+                )
+            )
+            result = session.execute(
+                delete(JobEntity).where(JobEntity.created_at < cutoff)
+            )
+            session.commit()
+            return result.rowcount or 0

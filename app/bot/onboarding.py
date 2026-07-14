@@ -21,6 +21,7 @@ from telegram.ext import filters
 from app.bot.commands import CANCEL
 from app.bot.commands import PREFERENCES
 from app.bot.commands import START
+from app.config.settings import settings
 from app.database.preference_repository import PreferenceRepository
 from app.database.user_repository import UserRepository
 from app.models.preference import UserPreference
@@ -62,6 +63,15 @@ SOURCE_OPTIONS = [
 ]
 
 DONE = "__done__"
+
+
+def _available_source_options() -> list[str]:
+    """Only show job sources that this deployment actually runs."""
+    return [
+        source
+        for source in SOURCE_OPTIONS
+        if getattr(settings.sources, source).enabled
+    ]
 
 
 
@@ -255,7 +265,7 @@ class OnboardingFlow:
             await query.message.reply_text(
                 "Sources:",
                 reply_markup=_toggle_keyboard(
-                    SOURCE_OPTIONS,
+                    _available_source_options(),
                     context.user_data["enabled_sources"],
                     "src",
                 ),
@@ -308,7 +318,9 @@ class OnboardingFlow:
             selected.add(value)
 
         await query.edit_message_reply_markup(
-            reply_markup=_toggle_keyboard(SOURCE_OPTIONS, selected, "src")
+            reply_markup=_toggle_keyboard(
+                _available_source_options(), selected, "src"
+            )
         )
 
         return SOURCES
@@ -408,7 +420,7 @@ class OnboardingFlow:
         )
 
         logger.success(
-            f"Onboarding completed for chat_id={chat.id}"
+            "Onboarding completed."
         )
 
         return ConversationHandler.END

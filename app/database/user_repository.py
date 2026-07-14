@@ -81,6 +81,7 @@ class UserRepository:
                 return
 
             entity.onboarding_completed = True
+            entity.is_active = True
             entity.updated_at = datetime.utcnow()
 
             session.commit()
@@ -98,6 +99,20 @@ class UserRepository:
             entity.is_active = active
             entity.updated_at = datetime.utcnow()
 
+            session.commit()
+
+    @staticmethod
+    def reset_onboarding(user_id: int) -> None:
+        """End a preference session while retaining the chat account."""
+        with get_session() as session:
+            entity = session.get(UserEntity, user_id)
+
+            if entity is None:
+                return
+
+            entity.is_active = False
+            entity.onboarding_completed = False
+            entity.updated_at = datetime.utcnow()
             session.commit()
 
     @staticmethod

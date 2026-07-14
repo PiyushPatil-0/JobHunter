@@ -5,6 +5,7 @@ Core JobHunter Engine.
 from __future__ import annotations
 
 from app.collectors.manager import CollectorManager
+from app.config.settings import settings
 from app.database.notification_repository import UserNotificationRepository
 from app.database.preference_repository import PreferenceRepository
 from app.database.repository import JobRepository
@@ -14,6 +15,7 @@ from app.filters.job_filter import JobFilter
 from app.matching.preference_matcher import PreferenceMatcher
 from app.models.job import Job
 from app.notifications.telegram import TelegramNotifier
+from app.notifications.message_builder import MessageBuilder
 from app.utils.hash_utils import assign_job_hash
 from app.utils.logger import logger
 
@@ -37,6 +39,10 @@ class JobEngine:
         logger.info("Starting JobHunter Engine...")
 
         result = EngineResult()
+
+        removed = self.repository.cleanup(settings.database.job_retention_days)
+        if removed:
+            logger.info(f"Removed {removed} expired jobs.")
 
         jobs = self.collector_manager.collect_jobs(group=group)
 
@@ -171,24 +177,17 @@ Failed       : {result.failed}
             for job in unseen_matches:
                 job.match_score = PreferenceMatcher.score(job, preference)
 
-            sent = self.notifier.send_jobs(
-                user.telegram_chat_id,
-                unseen_matches,
-            )
+            # Telegram digests are capped at MAX_JOBS. Send and record
+            # each batch independently so jobs beyond the first page are
+            # never marked as delivered without actually being shown.
+            for batch in MessageBuilder.batches(unseen_matches):
+                sent = self.notifier.send_jobs(user.telegram_chat_id, batch)
 
-            if sent:
-
-                for job in unseen_matches:
-
-                    UserNotificationRepository.record(
-                        user.id,
-                        job.hash,
-                    )
-
-                notified += len(unseen_matches)
-
-            else:
-
-                failed += len(unseen_matches)
+                if sent:
+                    for job in batch:
+                        UserNotificationRepository.record(user.id, job.hash)
+                    notified += len(batch)
+                else:
+                    failed += len(batch)
 
         return notified, failed

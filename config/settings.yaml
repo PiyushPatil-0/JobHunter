@@ -14,38 +14,12 @@ scheduler:
 
 database:
   path: data/jobs.db
+  # Job records and related notification history older than this are removed
+  # automatically at the start of each scan.
+  job_retention_days: 14
 
 telegram:
   enabled: true
-
-filters:
-  minimum_match_score: 60
-
-job_preferences:
-  # Baseline seed for LinkedIn/Naukri search scope and for the
-  # location allowlist - real relevance filtering happens per user
-  # via onboarding preferences, not here.
-  keywords:
-    - Java
-    - Spring Boot
-    - Backend
-    - Microservices
-    - Kafka
-    - Redis
-    - Docker
-
-  locations:
-    - Mumbai
-    - Navi Mumbai
-    - Thane
-    - Remote
-
-  experience:
-    - Fresher
-    - 0-1 years
-
-  employment_types:
-    - Full Time
 
 companies:
   include: []
@@ -57,38 +31,43 @@ companies:
 sources:
 
   greenhouse:
+    # No verified India-focused Greenhouse board has active postings
+    # currently. Keep this off rather than issuing an empty request
+    # every scan; add a verified board here when one is available.
+    enabled: false
+    companies: []
 
-    enabled: true
-
-    companies:
-
-      - stripe
-      - mongodb
-      - datadog
-      - cloudflare
-      - plaid
-      - figma
-
+  # These boards have current India openings (Mumbai, Delhi,
+  # Ahmedabad, Bangalore, and hybrid/remote India roles).
   lever:
-
-    enabled: false
-
+    enabled: true
     companies:
-      - example-lever-company
+      - aleph
+      - dnb
+      - applydigital
+      - employ
+      - pattern
+      - entrata
+      - hevodata
+      - weloglobal
 
+  # India-focused Ashby boards, including Bangalore and Pune roles.
   ashby:
-
-    enabled: false
-
+    enabled: true
     companies:
-      - example-ashby-company
+      - almabase
+      - uptimeai
+      - gainsight
+      - aiprise
+      - ripplestreet
+      - skylo
 
+  # careers.smartrecruiters.com/aristanetworks - verified live
+  # with open postings.
   smartrecruiters:
-
-    enabled: false
-
+    enabled: true
     companies:
-      - example-smartrecruiters-company
+      - aristanetworks
 
   # Workday has no simple company slug - each tenant's host/site
   # combination is unique to that company's career site. Read
@@ -97,43 +76,28 @@ sources:
   #   host: acme.wd5.myworkdayjobs.com
   #   tenant: acme
   #   site: External
+  #
+  # Both tenants below verified live with open postings.
   workday:
-
-    enabled: false
-
+    enabled: true
     tenants:
-      - host: example.wd5.myworkdayjobs.com
-        tenant: example
-        site: External
+      - host: baincapital.wd1.myworkdayjobs.com
+        tenant: baincapital
+        site: External_Public
+      - host: nvidia.wd5.myworkdayjobs.com
+        tenant: nvidia
+        site: NVIDIAExternalCareerSite
 
   # Both job board sources are unofficial scrapers of public
   # search endpoints (see app/collectors/linkedin.py and
-  # naukri.py for details). Disabled by default - review the
-  # relevant Terms of Service, then flip enabled: true.
+  # naukri.py for details). Left disabled - review the relevant
+  # Terms of Service before flipping enabled: true, since these
+  # are a different risk profile than the official ATS APIs above.
 
   linkedin:
-
     enabled: false
-
-    keywords:
-      - Java Backend Developer
-      - Software Engineer
-
-    locations:
-      - India
-      - Remote
-
     max_pages: 2
 
   naukri:
-
     enabled: false
-
-    keywords:
-      - Java Backend Developer
-
-    locations:
-      - Mumbai
-      - Bangalore
-
     max_pages: 2

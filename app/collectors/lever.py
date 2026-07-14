@@ -12,6 +12,7 @@ from app.collectors.http_client import HttpClient
 from app.models.job import EmploymentType
 from app.models.job import Job
 from app.models.job import JobSource
+from app.utils.datetime_utils import parse_posted_at
 from app.utils.logger import logger
 
 
@@ -75,6 +76,8 @@ class LeverCollector(BaseCollector):
                                     item.get("descriptionPlain", "")
                                     or item.get("description", "")
                                 ),
+
+                                posted_at=parse_posted_at(item.get("createdAt")),
                             )
                         )
 

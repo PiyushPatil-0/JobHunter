@@ -11,6 +11,8 @@ from telegram.ext import Application
 from telegram.ext import CommandHandler
 
 from app.bot.commands import HELP
+from app.bot.commands import DELETE_PREFERENCES
+from app.bot.commands import END_SESSION
 from app.bot.commands import PAUSE
 from app.bot.commands import RESUME
 from app.bot.commands import SCAN
@@ -83,6 +85,14 @@ class TelegramBot:
                 RESUME,
                 handlers.resume,
             )
+        )
+
+        self.application.add_handler(
+            CommandHandler(END_SESSION, handlers.end_session)
+        )
+
+        self.application.add_handler(
+            CommandHandler(DELETE_PREFERENCES, handlers.delete_preferences)
         )
 
     def start(self) -> None:

@@ -8,10 +8,7 @@ so it can change or start rejecting requests without notice; treat
 it as best-effort, not a stable integration.
 
 Search keywords/locations are built fresh on every scan from the
-union of onboarded users who enabled "linkedin" as a source, plus
-the config baseline (see app.collectors.search_scope) - so this
-collector actually searches for what users asked for, not a frozen
-YAML list.
+union of onboarded users who enabled "linkedin" as a source.
 
 Review LinkedIn's Terms of Service before relying on this at scale.
 """
@@ -47,17 +44,10 @@ class LinkedInCollector(BaseCollector):
 
     def __init__(
         self,
-        keywords: list[str],
-        locations: list[str],
         max_pages: int = 2,
     ) -> None:
 
         self.client = HttpClient()
-
-        self.baseline_keywords = keywords
-
-        self.baseline_locations = locations
-
         self.max_pages = max_pages
 
     @property
@@ -66,18 +56,13 @@ class LinkedInCollector(BaseCollector):
 
     def collect(self) -> list[Job]:
 
-        keywords, locations = build_search_scope(
-            SOURCE_KEY,
-            self.baseline_keywords,
-            self.baseline_locations,
-        )
+        keywords, locations = build_search_scope(SOURCE_KEY)
 
         if not keywords:
 
             logger.warning(
                 "LinkedIn: no search keywords available "
-                "(empty baseline config and no onboarded users "
-                "with linkedin enabled). Skipping."
+                "(no onboarded users with linkedin enabled). Skipping."
             )
 
             return []

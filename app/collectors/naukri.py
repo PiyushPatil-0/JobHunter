@@ -8,10 +8,7 @@ the public frontend sends, not credentials, but the endpoint's
 shape can still change without notice.
 
 Search keywords/locations are built fresh on every scan from the
-union of onboarded users who enabled "naukri" as a source, plus
-the config baseline (see app.collectors.search_scope) - so this
-collector actually searches for what users asked for, not a frozen
-YAML list.
+union of onboarded users who enabled "naukri" as a source.
 
 Review Naukri's Terms of Service before relying on this at scale.
 """
@@ -48,17 +45,10 @@ class NaukriCollector(BaseCollector):
 
     def __init__(
         self,
-        keywords: list[str],
-        locations: list[str],
         max_pages: int = 2,
     ) -> None:
 
         self.client = HttpClient()
-
-        self.baseline_keywords = keywords
-
-        self.baseline_locations = locations
-
         self.max_pages = max_pages
 
     @property
@@ -67,18 +57,13 @@ class NaukriCollector(BaseCollector):
 
     def collect(self) -> list[Job]:
 
-        keywords, locations = build_search_scope(
-            SOURCE_KEY,
-            self.baseline_keywords,
-            self.baseline_locations,
-        )
+        keywords, locations = build_search_scope(SOURCE_KEY)
 
         if not keywords:
 
             logger.warning(
                 "Naukri: no search keywords available "
-                "(empty baseline config and no onboarded users "
-                "with naukri enabled). Skipping."
+                "(no onboarded users with naukri enabled). Skipping."
             )
 
             return []

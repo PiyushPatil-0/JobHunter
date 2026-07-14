@@ -6,15 +6,34 @@ from __future__ import annotations
 
 from datetime import datetime
 
+from sqlalchemy import delete
 from sqlalchemy import select
 
 from app.database.database import get_session
 from app.database.models import Preference as PreferenceEntity
 from app.database.models import User as UserEntity
+from app.database.models import UserNotification as UserNotificationEntity
 from app.models.preference import UserPreference
 
 
 class PreferenceRepository:
+
+    @staticmethod
+    def delete_by_user_id(user_id: int) -> bool:
+        """Remove a user's saved preferences and delivery history."""
+        with get_session() as session:
+            session.execute(
+                delete(UserNotificationEntity).where(
+                    UserNotificationEntity.user_id == user_id
+                )
+            )
+            result = session.execute(
+                delete(PreferenceEntity).where(
+                    PreferenceEntity.user_id == user_id
+                )
+            )
+            session.commit()
+            return bool(result.rowcount)
 
     @staticmethod
     def get_by_user_id(user_id: int) -> UserPreference | None:

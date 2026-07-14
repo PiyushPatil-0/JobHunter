@@ -86,8 +86,6 @@ def main() -> None:
     if settings.sources.linkedin.enabled:
         collector_manager.register(
             LinkedInCollector(
-                keywords=settings.sources.linkedin.keywords,
-                locations=settings.sources.linkedin.locations,
                 max_pages=settings.sources.linkedin.max_pages,
             ),
             group=CollectorGroup.JOB_BOARDS,
@@ -96,8 +94,6 @@ def main() -> None:
     if settings.sources.naukri.enabled:
         collector_manager.register(
             NaukriCollector(
-                keywords=settings.sources.naukri.keywords,
-                locations=settings.sources.naukri.locations,
                 max_pages=settings.sources.naukri.max_pages,
             ),
             group=CollectorGroup.JOB_BOARDS,

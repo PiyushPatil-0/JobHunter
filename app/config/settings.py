@@ -27,21 +27,11 @@ class SchedulerConfig(BaseModel):
 
 class DatabaseConfig(BaseModel):
     path: str
+    job_retention_days: int = Field(default=14, ge=1)
 
 
 class TelegramConfig(BaseModel):
     enabled: bool
-
-
-class FilterConfig(BaseModel):
-    minimum_match_score: int
-
-
-class JobPreferenceConfig(BaseModel):
-    keywords: list[str]
-    locations: list[str]
-    experience: list[str]
-    employment_types: list[str]
 
 
 class CompanyConfig(BaseModel):
@@ -88,15 +78,11 @@ class WorkdayConfig(BaseModel):
 
 class LinkedInConfig(BaseModel):
     enabled: bool = False
-    keywords: list[str] = Field(default_factory=list)
-    locations: list[str] = Field(default_factory=list)
     max_pages: int = 2
 
 
 class NaukriConfig(BaseModel):
     enabled: bool = False
-    keywords: list[str] = Field(default_factory=list)
-    locations: list[str] = Field(default_factory=list)
     max_pages: int = 2
 
 
@@ -117,8 +103,6 @@ class Settings(BaseModel):
     scheduler: SchedulerConfig
     database: DatabaseConfig
     telegram: TelegramConfig
-    filters: FilterConfig
-    job_preferences: JobPreferenceConfig
     companies: CompanyConfig
     sources: SourcesConfig
 

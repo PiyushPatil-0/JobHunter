@@ -2,13 +2,11 @@
 Builds the live search scope (keywords + locations) for consumer
 job board collectors, from the union of every active user's
 preferences - filtered to users who actually enabled that specific
-source during onboarding - plus an optional static baseline from
-config.
+source during onboarding.
 
 This is what makes LinkedIn/Naukri search for what users actually
-asked for, instead of a frozen YAML list. Config keywords/locations
-become a floor that's always included (so a fresh install with zero
-onboarded users still searches for something), not the ceiling.
+asked for, instead of a frozen YAML list. With no matching user
+preferences, the collector has no search request and does not run.
 """
 
 from __future__ import annotations
@@ -18,21 +16,10 @@ from app.database.preference_repository import PreferenceRepository
 
 def build_search_scope(
     source_key: str,
-    baseline_keywords: list[str] | None = None,
-    baseline_locations: list[str] | None = None,
 ) -> tuple[list[str], list[str]]:
 
-    keywords: set[str] = {
-        keyword.strip()
-        for keyword in (baseline_keywords or [])
-        if keyword.strip()
-    }
-
-    locations: set[str] = {
-        location.strip()
-        for location in (baseline_locations or [])
-        if location.strip()
-    }
+    keywords: set[str] = set()
+    locations: set[str] = set()
 
     for preference in PreferenceRepository.list_all_active():
 

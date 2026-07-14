@@ -3,6 +3,7 @@ Centralized logging configuration for JobHunter AI.
 """
 
 from pathlib import Path
+import sys
 
 from loguru import logger
 
@@ -13,8 +14,14 @@ LOG_DIR.mkdir(exist_ok=True)
 
 logger.remove()
 
+# Windows terminals commonly default to cp1252, which cannot render
+# Loguru tracebacks containing box-drawing characters. Keep console
+# logging UTF-8 so an error never triggers a second logging error.
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+
 logger.add(
-    sink=lambda msg: print(msg, end=""),
+    sink=sys.stdout,
     level="INFO",
     colorize=True,
     format="<green>{time:YYYY-MM-DD HH:mm:ss}</green> | "

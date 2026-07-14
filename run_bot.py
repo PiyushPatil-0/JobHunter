@@ -2,6 +2,8 @@
 Run JobHunter Telegram Bot.
 """
 
+from threading import Thread
+
 from app.bot.telegram_bot import TelegramBot
 from app.collectors.ashby import AshbyCollector
 from app.collectors.greenhouse import GreenhouseCollector
@@ -18,6 +20,7 @@ from app.database.repository import JobRepository
 from app.engine.job_engine import JobEngine
 from app.notifications.telegram import TelegramNotifier
 from app.services.scan_service import ScanService
+from app.scheduler.scheduler import JobScheduler
 
 
 def main() -> None:
@@ -72,8 +75,6 @@ def main() -> None:
     if settings.sources.linkedin.enabled:
         manager.register(
             LinkedInCollector(
-                keywords=settings.sources.linkedin.keywords,
-                locations=settings.sources.linkedin.locations,
                 max_pages=settings.sources.linkedin.max_pages,
             ),
             group=CollectorGroup.JOB_BOARDS,
@@ -82,8 +83,6 @@ def main() -> None:
     if settings.sources.naukri.enabled:
         manager.register(
             NaukriCollector(
-                keywords=settings.sources.naukri.keywords,
-                locations=settings.sources.naukri.locations,
                 max_pages=settings.sources.naukri.max_pages,
             ),
             group=CollectorGroup.JOB_BOARDS,
@@ -96,6 +95,12 @@ def main() -> None:
     )
 
     scan_service = ScanService(engine)
+
+    # Keep scheduled collection and Telegram polling in one process.
+    # JobScheduler uses a blocking scheduler, so it runs on a daemon
+    # thread while the main thread owns the Telegram event loop.
+    scheduler = JobScheduler(scan_service, manager)
+    Thread(target=scheduler.start, name="job-scheduler", daemon=True).start()
 
     bot = TelegramBot(scan_service)
 

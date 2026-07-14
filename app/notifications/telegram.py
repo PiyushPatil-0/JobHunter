@@ -56,7 +56,7 @@ class TelegramNotifier:
             if result.get("ok"):
 
                 logger.success(
-                    f"Telegram notification sent to {chat_id}."
+                    "Telegram notification sent."
                 )
 
                 return True
@@ -68,7 +68,7 @@ class TelegramNotifier:
         except Exception:
 
             logger.exception(
-                f"Telegram notification failed for {chat_id}."
+                "Telegram notification failed."
             )
 
             return False
