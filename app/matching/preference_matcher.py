@@ -15,23 +15,45 @@ from app.models.job import Job
 from app.models.preference import UserPreference
 from app.utils.experience_classifier import ExperienceClassifier
 from app.utils.experience_ranges import EXPERIENCE_RANGES
+from app.utils.synonyms import expand
+from app.utils.synonyms import fuzzy_match
+from app.utils.synonyms import normalize_phrase
 
 SKILL_WEIGHT = 20
 LOCATION_WEIGHT = 30
 GENERIC_ROLE_WORDS = {"developer", "engineer", "manager", "specialist", "analyst"}
-LOCATION_ALIASES = {
-    "bangalore": {"bangalore", "bengaluru"},
-    "bengaluru": {"bangalore", "bengaluru"},
-    "gurgaon": {"gurgaon", "gurugram"},
-    "gurugram": {"gurgaon", "gurugram"},
-}
 
 
 class PreferenceMatcher:
+    """
+    Matching is phrase-based, not raw substring: text is tokenised on
+    non-alphanumeric boundaries and every term is checked with word
+    boundaries so "java" never matches inside "javascript", and every
+    term is expanded through app.utils.synonyms so equivalent spellings
+    ("bangalore"/"bengaluru", ".net"/"dotnet", "bcom"/"bachelor of
+    commerce", ...) are treated as the same thing. A fuzzy fallback
+    catches spelling variants that aren't in the synonym list at all
+    yet (typos like "Bengalooru").
+    """
 
     @staticmethod
-    def _normalise(value: str) -> str:
+    def _norm_word(value: str) -> str:
         return re.sub(r"[^a-z0-9]+", "", value.lower())
+
+    @staticmethod
+    def _contains_any(haystack: str, phrases: set[str]) -> bool:
+        return any(phrase in haystack for phrase in phrases if phrase)
+
+    @staticmethod
+    def _term_matches(haystack: str, term: str) -> bool:
+        """
+        True if `term` (or a known synonym of it) appears in
+        `haystack`. Falls back to a conservative fuzzy match for
+        spelling variants that aren't in any synonym group yet.
+        """
+        if PreferenceMatcher._contains_any(haystack, expand(term)):
+            return True
+        return fuzzy_match(haystack, term)
 
     @classmethod
     def matches(cls, job: Job, preference: UserPreference) -> bool:
@@ -60,50 +82,56 @@ class PreferenceMatcher:
         if not role:
             return True
 
-        title = PreferenceMatcher._normalise(job.title)
-        normalised_role = PreferenceMatcher._normalise(role)
-        if normalised_role in title:
+        title = normalize_phrase(job.title)
+
+        # Try the role as a whole phrase first (and any synonyms of
+        # that whole phrase, e.g. "sde" for "software development
+        # engineer").
+        if PreferenceMatcher._term_matches(title, role):
             return True
 
+        # Fall back to individual significant words, synonym- and
+        # fuzzy-matched too, so "java developer" still matches "Java
+        # Backend Developer" or "Java Backend Engineer" even though
+        # the full phrases differ. Generic words like
+        # "developer"/"engineer" are skipped since they'd match almost
+        # any title.
         role_terms = [
-            PreferenceMatcher._normalise(term)
+            term
             for term in role.split()
-            if PreferenceMatcher._normalise(term) not in GENERIC_ROLE_WORDS
-            and len(PreferenceMatcher._normalise(term)) >= 3
+            if PreferenceMatcher._norm_word(term) not in GENERIC_ROLE_WORDS
+            and len(PreferenceMatcher._norm_word(term)) >= 3
         ]
-        return bool(role_terms) and any(term in title for term in role_terms)
+        return bool(role_terms) and any(
+            PreferenceMatcher._term_matches(title, term) for term in role_terms
+        )
 
     @staticmethod
     def _skills_ok(job: Job, preference: UserPreference) -> bool:
         """A job must mention at least one requested skill, if any."""
-        requested_skills = [
-            PreferenceMatcher._normalise(skill.strip())
-            for skill in preference.skills
-            if skill.strip()
-        ]
+        requested_skills = [skill.strip() for skill in preference.skills if skill.strip()]
         if not requested_skills:
             return True
 
-        text = PreferenceMatcher._normalise(f"{job.title} {job.description}")
-        return any(skill in text for skill in requested_skills)
+        text = normalize_phrase(f"{job.title} {job.description}")
+        return any(
+            PreferenceMatcher._term_matches(text, skill) for skill in requested_skills
+        )
 
     @staticmethod
     def _location_ok(job: Job, preference: UserPreference) -> bool:
         """Require one of the user's requested locations, if any."""
         requested_locations = [
-            location.strip().lower()
-            for location in preference.locations
-            if location.strip()
+            location.strip() for location in preference.locations if location.strip()
         ]
         if not requested_locations:
             return True
 
-        job_location = job.location.lower()
-        for location in requested_locations:
-            aliases = LOCATION_ALIASES.get(location, {location})
-            if any(alias in job_location for alias in aliases):
-                return True
-        return False
+        job_location = normalize_phrase(job.location)
+        return any(
+            PreferenceMatcher._term_matches(job_location, location)
+            for location in requested_locations
+        )
 
     @staticmethod
     def _source_ok(job: Job, preference: UserPreference) -> bool:
@@ -158,11 +186,11 @@ class PreferenceMatcher:
 
         score = 0
 
-        text = cls._normalise(f"{job.title} {job.description}")
+        text = normalize_phrase(f"{job.title} {job.description}")
 
         if preference.skills and cls._skills_ok(job, preference):
             score += SKILL_WEIGHT * sum(
-                cls._normalise(skill.strip()) in text
+                cls._term_matches(text, skill.strip())
                 for skill in preference.skills
                 if skill.strip()
             )

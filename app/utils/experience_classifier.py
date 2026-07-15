@@ -6,6 +6,8 @@ from __future__ import annotations
 
 import re
 
+from app.utils.synonyms import normalize_phrase
+
 
 class ExperienceClassifier:
 
@@ -23,7 +25,6 @@ class ExperienceClassifier:
         "graduate",
         "new grad",
         "entry",
-        "associate",
         "junior",
         "fresher",
     }
@@ -31,14 +32,21 @@ class ExperienceClassifier:
     @classmethod
     def classify(cls, title: str, description: str) -> int:
 
-        text = f"{title} {description}".lower()
+        # Word-boundary matching, not raw substring: "leadership" must
+        # not trigger the "lead" -> senior rule, and "Associate
+        # Director" must not trigger an "associate" -> entry rule
+        # (which is why "associate" was dropped from ENTRY_WORDS below
+        # - as a bare word it collides with senior-ish titles like
+        # "Associate Director"/"Associate Vice President" far more
+        # often than it means "entry level").
+        text = normalize_phrase(f"{title} {description}")
 
         for word in cls.ENTRY_WORDS:
-            if word in text:
+            if normalize_phrase(word) in text:
                 return 0
 
         for word in cls.SENIOR_WORDS:
-            if word in text:
+            if normalize_phrase(word) in text:
                 return 5
 
         matches = re.findall(
