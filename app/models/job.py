@@ -20,6 +20,9 @@ class JobSource(str, Enum):
     WORKDAY = "Workday"
     SMARTRECRUITERS = "SmartRecruiters"
     ASHBY = "Ashby"
+    ADZUNA = "Adzuna"
+    CAREERJET = "Careerjet"
+    JOOBLE = "Jooble"
     # Generic fallback - used by collectors (e.g. the dev-only
     # DummyCollector) that don't map to a specific real ATS.
     COMPANY = "Company"
@@ -55,6 +58,15 @@ class Job(BaseModel):
     posted_at: datetime | None = None
 
     collected_at: datetime = Field(default_factory=datetime.utcnow)
+
+    # Some sources (e.g. Adzuna) contractually require a visible
+    # credit line wherever their listings are displayed. Left blank
+    # by collectors that don't need it; app.notifications.message_builder
+    # renders it when present rather than any collector special-casing
+    # a specific source name.
+    attribution_text: str = ""
+
+    attribution_url: str = ""
 
     # Engine metadata
     match_score: float = 0.0

@@ -80,6 +80,16 @@ class MessageBuilder:
             timestamp = job.posted_at or job.collected_at
             age_label = "Posted" if job.posted_at else "Discovered"
 
+            attribution = ""
+            if job.attribution_text:
+                if job.attribution_url:
+                    attribution = (
+                        f'\n<a href="{cls._escaped(job.attribution_url, 240)}">'
+                        f"{cls._escaped(job.attribution_text, 60)}</a>\n"
+                    )
+                else:
+                    attribution = f"\n{cls._escaped(job.attribution_text, 60)}\n"
+
             lines.append(
                 f"""
 <b>{index}. {cls._escaped(job.title, 160)}</b>
@@ -93,7 +103,7 @@ class MessageBuilder:
 ⭐ Match Score: {int(job.match_score)}
 
 <a href="{cls._escaped(job.url, 240)}">Apply Here</a>
-
+{attribution}
 ────────────────────
 """
             )

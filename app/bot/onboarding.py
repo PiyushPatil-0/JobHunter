@@ -60,6 +60,7 @@ SOURCE_OPTIONS = [
     "ashby",
     "linkedin",
     "naukri",
+    "aggregator",
 ]
 
 DONE = "__done__"

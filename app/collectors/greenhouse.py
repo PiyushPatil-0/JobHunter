@@ -15,12 +15,25 @@ from app.utils.logger import logger
 class GreenhouseCollector(BaseCollector):
 
     BASE_URL = "https://boards-api.greenhouse.io/v1/boards"
+    EU_BASE_URL = "https://boards-api.eu.greenhouse.io/v1/boards"
 
-    def __init__(self, companies: list[str]) -> None:
+    def __init__(
+        self,
+        companies: list[str],
+        eu_companies: list[str] | None = None,
+    ) -> None:
 
         self.client = HttpClient()
 
         self.companies = companies
+
+        # Some companies' boards are hosted on Greenhouse's
+        # EU-specific domain instead of the global one - a
+        # completely different API host, not just a query param.
+        # Kept as a separate list (rather than auto-detecting) since
+        # there's no reliable way to tell which host a given company
+        # slug lives on without trying both.
+        self.eu_companies = eu_companies or []
 
     @property
     def name(self) -> str:
@@ -30,75 +43,80 @@ class GreenhouseCollector(BaseCollector):
 
         jobs: list[Job] = []
 
-        for company in self.companies:
+        for base_url, companies in (
+            (self.BASE_URL, self.companies),
+            (self.EU_BASE_URL, self.eu_companies),
+        ):
 
-            url = f"{self.BASE_URL}/{company}/jobs"
+            for company in companies:
 
-            logger.info(f"Loading {company}")
+                url = f"{base_url}/{company}/jobs"
 
-            try:
+                logger.info(f"Loading {company}")
 
-                data = self.client.get_json(url)
+                try:
 
-                for item in data.get("jobs", []):
+                    data = self.client.get_json(url)
 
-                    title = item.get("title", "")
+                    for item in data.get("jobs", []):
 
-                    # No title-based relevance filtering here.
-                    # Whether a job is relevant is entirely up to
-                    # each onboarded user's own preferences
-                    # (app.matching.PreferenceMatcher) - a hardcoded
-                    # allowlist here would silently drop roles for
-                    # any user whose interests don't fit one persona.
+                        title = item.get("title", "")
 
-                    try:
+                        # No title-based relevance filtering here.
+                        # Whether a job is relevant is entirely up to
+                        # each onboarded user's own preferences
+                        # (app.matching.PreferenceMatcher) - a hardcoded
+                        # allowlist here would silently drop roles for
+                        # any user whose interests don't fit one persona.
 
-                        jobs.append(
+                        try:
 
-                            Job(
+                            jobs.append(
 
-                                title=title,
+                                Job(
 
-                                company=company,
+                                    title=title,
 
-                                location=item.get(
-                                    "location",
-                                    {}
-                                ).get(
-                                    "name",
-                                    ""
-                                ),
+                                    company=company,
 
-                                experience="Unknown",
+                                    location=item.get(
+                                        "location",
+                                        {}
+                                    ).get(
+                                        "name",
+                                        ""
+                                    ),
 
-                                source=JobSource.GREENHOUSE,
+                                    experience="Unknown",
 
-                                url=item.get(
-                                    "absolute_url",
-                                    ""
-                                ),
+                                    source=JobSource.GREENHOUSE,
 
-                                employment_type=EmploymentType.FULL_TIME,
+                                    url=item.get(
+                                        "absolute_url",
+                                        ""
+                                    ),
 
-                                description=item.get("content", "")
+                                    employment_type=EmploymentType.FULL_TIME,
+
+                                    description=item.get("content", "")
+                                )
                             )
-                        )
 
-                    except Exception:
+                        except Exception:
 
-                        # A single malformed listing (e.g. missing/
-                        # too-short title) shouldn't abort the rest
-                        # of this company's postings.
-                        logger.warning(
-                            f"Skipped malformed job at {company}: "
-                            f"{title!r}"
-                        )
+                            # A single malformed listing (e.g. missing/
+                            # too-short title) shouldn't abort the rest
+                            # of this company's postings.
+                            logger.warning(
+                                f"Skipped malformed job at {company}: "
+                                f"{title!r}"
+                            )
 
-            except Exception:
+                except Exception:
 
-                logger.exception(
-                    f"Failed: {company}"
-                )
+                    logger.exception(
+                        f"Failed: {company}"
+                    )
 
         logger.success(
             f"Collected {len(jobs)} jobs "

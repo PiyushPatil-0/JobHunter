@@ -2,12 +2,14 @@
 Run JobHunter Telegram Bot.
 """
 
+import os
 from threading import Thread
 
 from app.bot.telegram_bot import TelegramBot
 from app.collectors.ashby import AshbyCollector
 from app.collectors.greenhouse import GreenhouseCollector
 from app.collectors.groups import CollectorGroup
+from app.collectors.job_aggregator import JobAggregatorCollector
 from app.collectors.lever import LeverCollector
 from app.collectors.linkedin import LinkedInCollector
 from app.collectors.manager import CollectorManager
@@ -32,7 +34,8 @@ def main() -> None:
     if settings.sources.greenhouse.enabled:
         manager.register(
             GreenhouseCollector(
-                settings.sources.greenhouse.companies
+                settings.sources.greenhouse.companies,
+                eu_companies=settings.sources.greenhouse.eu_companies,
             ),
             group=CollectorGroup.ATS,
         )
@@ -84,6 +87,17 @@ def main() -> None:
         manager.register(
             NaukriCollector(
                 max_pages=settings.sources.naukri.max_pages,
+            ),
+            group=CollectorGroup.JOB_BOARDS,
+        )
+
+    if settings.sources.aggregator.enabled:
+        manager.register(
+            JobAggregatorCollector(
+                provider=settings.sources.aggregator.provider,
+                api_key=os.getenv("AGGREGATOR_API_KEY", ""),
+                api_secret=os.getenv("AGGREGATOR_API_SECRET", ""),
+                country=settings.sources.aggregator.country,
             ),
             group=CollectorGroup.JOB_BOARDS,
         )

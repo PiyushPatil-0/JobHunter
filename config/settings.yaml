@@ -30,12 +30,22 @@ companies:
 
 sources:
 
+  # currenciesdirect: verified live with explicit "India - Mumbai"
+  # (Accounts Payable Executive - finance/commerce domain) and
+  # "India - Hyderabad" (engineering) roles. Hosted on Greenhouse's
+  # EU domain, not the global one - see eu_companies below and
+  # app/collectors/greenhouse.py.
+  #
+  # capco: financial/banking consultancy, 191 live postings,
+  # heavily India - Pune weighted (.NET, React, Java Fullstack,
+  # Power BI, Hadoop, Fund Accounting BA, Solution Architect) plus
+  # India - Bengaluru roles. Standard (global) Greenhouse host.
   greenhouse:
-    # No verified India-focused Greenhouse board has active postings
-    # currently. Keep this off rather than issuing an empty request
-    # every scan; add a verified board here when one is available.
-    enabled: false
-    companies: []
+    enabled: true
+    companies:
+      - capco
+    eu_companies:
+      - currenciesdirect
 
   # These boards have current India openings (Mumbai, Delhi,
   # Ahmedabad, Bangalore, and hybrid/remote India roles).
@@ -52,6 +62,8 @@ sources:
       - weloglobal
 
   # India-focused Ashby boards, including Bangalore and Pune roles.
+  # Aspora (formerly Vance) - fintech/remittance for the Indian
+  # diaspora, India-headquartered - verified live on Ashby.
   ashby:
     enabled: true
     companies:
@@ -61,6 +73,7 @@ sources:
       - aiprise
       - ripplestreet
       - skylo
+      - Aspora
 
   # careers.smartrecruiters.com/aristanetworks - verified live
   # with open postings.
@@ -78,6 +91,12 @@ sources:
   #   site: External
   #
   # Both tenants below verified live with open postings.
+  #
+  # visa: global payments company (payments = commerce domain),
+  # confirmed large India engineering presence (Glassdoor shows
+  # India-specific salary bands for Senior/Staff Software Engineer
+  # roles; a secondary SmartRecruiters page also exists for Visa but
+  # their primary career site is this Workday tenant).
   workday:
     enabled: true
     tenants:
@@ -87,6 +106,9 @@ sources:
       - host: nvidia.wd5.myworkdayjobs.com
         tenant: nvidia
         site: NVIDIAExternalCareerSite
+      - host: visa.wd5.myworkdayjobs.com
+        tenant: visa
+        site: Visa
 
   # Both job board sources are unofficial scrapers of public
   # search endpoints (see app/collectors/linkedin.py and
@@ -101,3 +123,20 @@ sources:
   naukri:
     enabled: false
     max_pages: 2
+
+  # Pluggable across Adzuna / Careerjet / Jooble - see
+  # app/collectors/job_aggregator.py for the reasoning on why these
+  # three (not LinkedIn/Naukri/Darwinbox/Wellfound - all ruled out
+  # this session for ToS or active bot-detection reasons).
+  #
+  # 1. Pick a provider, register for API access, and confirm their
+  #    current terms yourself (Adzuna's have a real caveat - see the
+  #    collector's docstring).
+  # 2. Set provider below to "adzuna", "careerjet", or "jooble".
+  # 3. Put credentials in .env as AGGREGATOR_API_KEY /
+  #    AGGREGATOR_API_SECRET (see .env.example) - never here.
+  # 4. Flip enabled to true.
+  aggregator:
+    enabled: false
+    provider: ""
+    country: in

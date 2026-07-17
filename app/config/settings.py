@@ -44,6 +44,12 @@ class CompanyConfig(BaseModel):
 class GreenhouseConfig(BaseModel):
     enabled: bool = True
     companies: list[str]
+    # Some companies' Greenhouse boards are hosted on the EU-specific
+    # domain (job-boards.eu.greenhouse.io) rather than the global one
+    # - a different API host entirely. Discovered via
+    # currenciesdirect, which has genuine India (Mumbai/Hyderabad)
+    # roles but is unreachable through the global host.
+    eu_companies: list[str] = Field(default_factory=list)
 
 
 class LeverConfig(BaseModel):
@@ -86,6 +92,25 @@ class NaukriConfig(BaseModel):
     max_pages: int = 2
 
 
+class AggregatorConfig(BaseModel):
+    """
+    Config for the generic job-aggregator collector
+    (app.collectors.job_aggregator). Unlike LinkedIn/Naukri (whose
+    own terms prohibit this kind of use entirely), this plugs into
+    third-party job-search APIs that are explicitly built and
+    documented for third parties to integrate - Adzuna, Careerjet,
+    or Jooble.
+
+    Credentials are intentionally NOT here - they're secrets, same
+    category as TELEGRAM_BOT_TOKEN, and belong in .env
+    (AGGREGATOR_API_KEY / AGGREGATOR_API_SECRET), not in settings.yaml.
+    See .env.example.
+    """
+    enabled: bool = False
+    provider: str = ""  # "adzuna" | "careerjet" | "jooble"
+    country: str = "in"
+
+
 class SourcesConfig(BaseModel):
     greenhouse: GreenhouseConfig
     lever: LeverConfig = LeverConfig()
@@ -94,6 +119,7 @@ class SourcesConfig(BaseModel):
     workday: WorkdayConfig = WorkdayConfig()
     linkedin: LinkedInConfig = LinkedInConfig()
     naukri: NaukriConfig = NaukriConfig()
+    aggregator: AggregatorConfig = AggregatorConfig()
 
 
 # ---------- SETTINGS ----------
