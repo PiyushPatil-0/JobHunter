@@ -16,16 +16,3 @@ experience, employment type, and selected job sources.
 Use `/start` in Telegram to create preferences. `/end_session` pauses
 notifications; `/delete_preferences` removes saved preferences and delivery
 history.
-
-## Docker deployment
-
-Build and run with persistent volumes for the SQLite database and logs:
-
-```powershell
-docker build -t jobhunter-ai .
-docker run --env-file .env -v ${PWD}/data:/app/data -v ${PWD}/logs:/app/logs jobhunter-ai
-```
-
-Do not commit `.env`; use a secret manager or deployment environment variables
-in production. The application applies safe additive SQLite migrations at
-startup and automatically removes jobs older than `job_retention_days`.
