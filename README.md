@@ -5,7 +5,7 @@ experience, employment type, and selected job sources.
 
 ## Run locally
 
-1. Copy `.env.example` to `.env` and set `TELEGRAM_BOT_TOKEN`.
+1. In `.env` set `TELEGRAM_BOT_TOKEN`.
 2. Review `config/settings.yaml` for retention and ATS sources.
 3. Start the bot and scheduler together:
 
